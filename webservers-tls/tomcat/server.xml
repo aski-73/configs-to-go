@@ -1,0 +1,37 @@
+<!-- Tomcat9 Server Configuration for HTTP on Port 80 and HTTPS on Port 443 -->
+
+<!-- Important: Applications with Ports under < 1024 (Well Known Ports) require special permissions (root)  -->
+
+<!-- Port 8085 is the tomcat management port -->
+
+<Server port="8085" shutdown="SHUTDOWN">
+  <Service name="Catalina">
+	  
+	  <Connector port="80" protocol="HTTP/1.1" />
+	  <!-- Using JSSE Implementation for SSL/TLS connection -->
+	  <Connector
+		  protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+		  sslImplementationName="org.apache.tomcat.util.net.jsse.JSSEImplementation"
+		  port="443" 
+		  maxThreads="200"
+		  SSLEnabled="true"
+		  scheme="https"
+		  secure="true>">
+		  
+		  <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+		  <SSLHostConfig
+			  protocols="TLSv1.1+TLSv1.2+TLSv1.3">
+			  
+			  <Certificate
+				  certificateFile="/srv/fullchain.pem"
+				  certificateKeyFile="/srv/privkey.pem"
+				  certificateKeystorePassword=""
+				  type="RSA" />
+		  </SSLHostConfig>
+	  </Connector>
+   	 <Engine name="Catalina" defaultHost="localhost">
+     		 <Host name="localhost"  appBase="webapps" />
+    	</Engine>
+  </Service>
+</Server>
+
